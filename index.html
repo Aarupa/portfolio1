@@ -3,6 +3,17 @@
 
 <head>
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SJ5BLRX6XS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-SJ5BLRX6XS');
+    </script>
+
+
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3177648603231644"
         crossorigin="anonymous"></script>
     <meta charset="utf-8">
@@ -56,7 +67,7 @@
 </head>
 
 <body data-bs-spy="scroll" data-bs-target=".navbar" data-bs-offset="51">
-   
+
 
     <!-- Spinner Start -->
     <div id="spinner"
@@ -498,16 +509,16 @@
 
                         <script>
                             document.getElementById("contact-form").addEventListener("submit", function (event) {
-                                event.preventDefault(); 
+                                event.preventDefault();
 
-                               
+
                                 const formData = new FormData(this);
                                 const data = {};
                                 formData.forEach((value, key) => {
                                     data[key] = value;
                                 });
 
-                              
+
                                 fetch(this.action, {
                                     method: 'POST',
                                     headers: {
@@ -523,11 +534,11 @@
                                     })
                                     .then(result => {
                                         Toastify({
-                                        text: 'Your response is submitted',
-                                        duration: 3000,
-                                        close: true, 
-                                        gravity: 'top', 
-                                        backgroundColor: 'linear-gradient(to right, #00b09b, #96c93d)',
+                                            text: 'Your response is submitted',
+                                            duration: 3000,
+                                            close: true,
+                                            gravity: 'top',
+                                            backgroundColor: 'linear-gradient(to right, #00b09b, #96c93d)',
                                         }).showToast();
                                         console.log('Success:', result);
                                         document.getElementById("contact-form").reset();
