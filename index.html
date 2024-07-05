@@ -50,15 +50,13 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <!-- tostify labary -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 
 <body data-bs-spy="scroll" data-bs-target=".navbar" data-bs-offset="51">
-      <!-- Add Toggle Switch HTML -->
-      <label class="switch" id="themeToggle">
-        <input type="checkbox">
-        <span class="slider round"></span>
-    </label>
-
+   
 
     <!-- Spinner Start -->
     <div id="spinner"
@@ -76,9 +74,6 @@
         <a class='navbar-brand d-block d-lg-none' href='/'>
             <h1 class="text-primary fw-bold m-0">Aarti Lahane</h1>
         </a>
-        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
         <div class="collapse navbar-collapse justify-content-between py-4 py-lg-0" id="navbarCollapse">
             <div class="navbar-nav ms-auto py-0">
                 <a href="#home" class="nav-item nav-link active">Home</a>
@@ -111,7 +106,7 @@
                     <div class="typed-text d-none">Full - Stack Web Developer , Backend Developer, Coder , Freelancer
                     </div>
                     <div class="d-flex align-items-center pt-5">
-                        <a href="https://drive.google.com/file/d/1_WTUIJGXh69FEdq9BNjGnPVjg9ULHv8O/view?usp=sharing"
+                        <a href="https://drive.google.com/file/d/1N4HXinRL7Y_eApfwKBNfWfPaT5dje1yG/view?usp=sharing"
                             download class="btn btn-primary py-3 px-4 me-5">Download CV</a>
                     </div>
                 </div>
@@ -465,30 +460,33 @@
                 <div class="col-lg-7 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                     <h1> Suggestions / Feedback </h1>
                     <br>
-                    <form>
+                    <form id="contact-form" method="POST" action="http://localhost:3000/send">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="name" placeholder="Your Name">
+                                    <input type="text" class="form-control" id="name" name="name"
+                                        placeholder="Your Name">
                                     <label for="name">Your Name</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="email" class="form-control" id="email" placeholder="Your Email">
+                                    <input type="email" class="form-control" id="email" name="email"
+                                        placeholder="Your Email">
                                     <label for="email">Your Email</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="subject" placeholder="Subject">
+                                    <input type="text" class="form-control" id="subject" name="subject"
+                                        placeholder="Subject">
                                     <label for="subject">Subject</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <textarea class="form-control" placeholder="Leave a message here" id="message"
-                                        style="height: 100px"></textarea>
+                                    <textarea class="form-control" placeholder="Leave a message here" name="message"
+                                        id="message" style="height: 100px"></textarea>
                                     <label for="message">Message</label>
                                 </div>
                             </div>
@@ -496,19 +494,56 @@
                                 <button class="btn btn-primary py-3 px-5" type="submit" id="sendMessageButton">Send
                                     Message</button>
                             </div>
-
-                            <!-- Add a script section -->
-                            <script>
-                                // Get a reference to the button element
-                                var sendMessageButton = document.getElementById("sendMessageButton");
-
-                                // Add a click event listener to the button
-                                sendMessageButton.addEventListener("click", function () {
-                                    // Display a popup message
-                                    alert("Your response is submitted");
-                                });
-                            </script>
                         </div>
+
+                        <script>
+                            document.getElementById("contact-form").addEventListener("submit", function (event) {
+                                event.preventDefault(); 
+
+                               
+                                const formData = new FormData(this);
+                                const data = {};
+                                formData.forEach((value, key) => {
+                                    data[key] = value;
+                                });
+
+                              
+                                fetch(this.action, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify(data),
+                                })
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            throw new Error('Network response was not ok');
+                                        }
+                                        return response.text();
+                                    })
+                                    .then(result => {
+                                        Toastify({
+                                        text: 'Your response is submitted',
+                                        duration: 3000,
+                                        close: true, 
+                                        gravity: 'top', 
+                                        backgroundColor: 'linear-gradient(to right, #00b09b, #96c93d)',
+                                        }).showToast();
+                                        console.log('Success:', result);
+                                        document.getElementById("contact-form").reset();
+                                    })
+                                    .catch(error => {
+                                        Toastify({
+                                            text: 'An error occurred, please try again.',
+                                            duration: 3000,
+                                            close: true,
+                                            gravity: 'top',
+                                            backgroundColor: 'linear-gradient(to right, #ff5e62, #ff9966)',
+                                        }).showToast();
+                                        console.error('Error:', error);
+                                    });
+                            });
+                        </script>
                     </form>
                 </div>
             </div>
@@ -545,13 +580,10 @@
     <script src="lib/waypoints/waypoints.min.js"></script>
     <script src="lib/typed/typed.min.js"></script>
     <script src="lib/counterup/counterup.min.js"></script>
-    <script src="/lib/toggle/toggle.min.js"></script>
-    <!-- <script src="lib/owlcarousel/owl.carousel.min.js"></script> -->
     <script src="lib/isotope/isotope.pkgd.min.js"></script>
-    <!-- <script src="lib/lightbox/js/lightbox.min.js"></script> -->
-
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </body>
 
 </html>
