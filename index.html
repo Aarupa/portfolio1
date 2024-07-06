@@ -12,39 +12,11 @@
         gtag('config', 'G-J1D09BSN06');
     </script>
 
-
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3177648603231644"
-        crossorigin="anonymous"></script>
     <meta charset="utf-8">
     <title>Aarti Lahane</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
-    <meta content="" name="description">
-    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <!-- <link rel="manifest" href="/manifest.json"> -->
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
     <!-- Favicon -->
     <link href="favicon-32x32.png" rel="img">
-
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -52,8 +24,6 @@
 
     <!-- Libraries Stylesheet -->
     <link href="lib/animate/animate.min.css" rel="stylesheet">
-    <!-- <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet"> -->
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -506,60 +476,59 @@
                             </div>
 
                             <script>
-                                document.getElementById("contact-form").addEventListener("submit", async function (event) {
+                                document.getElementById("contact-form").addEventListener("submit", function (event) {
                                     event.preventDefault();
 
-                                    const formData = new FormData(this);
+                                    const formData = new FormData(document.getElementById("contact-form"));
                                     const data = {};
                                     formData.forEach((value, key) => {
                                         data[key] = value;
                                     });
 
-                                    try {
-                                        const response = await fetch(this.action, {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type': 'application/json',
-                                            },
-                                            body: JSON.stringify(data),
+                                    fetch("http://localhost:3000/send", {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify(data),
+                                    })
+                                        .then(response => {
+                                            if (!response.ok) {
+                                                throw new Error('Network response was not ok');
+                                            }
+                                            return response.text();
+                                        })
+                                        .then(result => {
+                                            Toastify({
+                                                text: 'Your response is submitted',
+                                                duration: 3000,
+                                                close: true,
+                                                gravity: 'top',
+                                                style: {
+                                                    background: 'linear-gradient(to right, #00b09b, #96c93d)',
+                                                },
+                                            }).showToast();
+
+                                            console.log('Success:', result);
+                                            document.getElementById("contact-form").reset();
+                                        })
+                                        .catch(error => {
+                                            Toastify({
+                                                text: 'An error occurred, please try again.',
+                                                duration: 3000,
+                                                close: true,
+                                                gravity: 'top',
+                                                style: {
+                                                    background: 'linear-gradient(to right, #ff5e62, #ff9966)',
+                                                },
+                                            }).showToast();
+
+                                            console.error('Error:', error);
                                         });
-
-                                        if (!response.ok) {
-                                            throw new Error('Network response was not ok');
-                                        }
-
-                                        const result = await response.text();
-
-                                        Toastify({
-                                            text: 'Your response is submitted',
-                                            duration: 3000,
-                                            close: true,
-                                            gravity: 'top',
-                                            style: {
-                                                background: 'linear-gradient(to right, #00b09b, #96c93d)',
-                                            },
-                                        }).showToast();
-
-                                        console.log('Success:', result);
-                                        document.getElementById("contact-form").reset();
-                                    } catch (error) {
-                                        Toastify({
-                                            text: 'An error occurred, please try again.',
-                                            duration: 3000,
-                                            close: true,
-                                            gravity: 'top',
-                                            style: {
-                                                background: 'linear-gradient(to right, #ff5e62, #ff9966)',
-                                            },
-                                        }).showToast();
-
-                                        console.error('Error:', error);
-                                    }
                                 });
                             </script>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>
