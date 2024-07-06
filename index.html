@@ -33,7 +33,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/manifest.json">
+    <!-- <link rel="manifest" href="/manifest.json"> -->
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
@@ -470,33 +470,33 @@
                 <div class="col-lg-7 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                     <h1> Suggestions / Feedback </h1>
                     <br>
-                    <form id="contact-form" method="POST" action="http://0.0.0.0:3000/send">
+                    <form id="contact-form" method="POST" action="http://localhost:3000/send">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="name" name="name"
-                                        placeholder="Your Name">
+                                        placeholder="Your Name" required>
                                     <label for="name">Your Name</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <input type="email" class="form-control" id="email" name="email"
-                                        placeholder="Your Email">
+                                        placeholder="Your Email" required>
                                     <label for="email">Your Email</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="subject" name="subject"
-                                        placeholder="Subject">
+                                        placeholder="Subject" required>
                                     <label for="subject">Subject</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
                                     <textarea class="form-control" placeholder="Leave a message here" name="message"
-                                        id="message" style="height: 100px"></textarea>
+                                        id="message" style="height: 100px" required></textarea>
                                     <label for="message">Message</label>
                                 </div>
                             </div>
@@ -504,57 +504,62 @@
                                 <button class="btn btn-primary py-3 px-5" type="submit" id="sendMessageButton">Send
                                     Message</button>
                             </div>
-                        </div>
 
-                        <script>
-                            document.getElementById("contact-form").addEventListener("submit", function (event) {
-                                event.preventDefault();
+                            <script>
+                                document.getElementById("contact-form").addEventListener("submit", async function (event) {
+                                    event.preventDefault();
 
+                                    const formData = new FormData(this);
+                                    const data = {};
+                                    formData.forEach((value, key) => {
+                                        data[key] = value;
+                                    });
 
-                                const formData = new FormData(this);
-                                const data = {};
-                                formData.forEach((value, key) => {
-                                    data[key] = value;
-                                });
+                                    try {
+                                        const response = await fetch(this.action, {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                            },
+                                            body: JSON.stringify(data),
+                                        });
 
-
-                                fetch(this.action, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify(data),
-                                })
-                                    .then(response => {
                                         if (!response.ok) {
                                             throw new Error('Network response was not ok');
                                         }
-                                        return response.text();
-                                    })
-                                    .then(result => {
+
+                                        const result = await response.text();
+
                                         Toastify({
                                             text: 'Your response is submitted',
                                             duration: 3000,
                                             close: true,
                                             gravity: 'top',
-                                            backgroundColor: 'linear-gradient(to right, #00b09b, #96c93d)',
+                                            style: {
+                                                background: 'linear-gradient(to right, #00b09b, #96c93d)',
+                                            },
                                         }).showToast();
+
                                         console.log('Success:', result);
                                         document.getElementById("contact-form").reset();
-                                    })
-                                    .catch(error => {
+                                    } catch (error) {
                                         Toastify({
                                             text: 'An error occurred, please try again.',
                                             duration: 3000,
                                             close: true,
                                             gravity: 'top',
-                                            backgroundColor: 'linear-gradient(to right, #ff5e62, #ff9966)',
+                                            style: {
+                                                background: 'linear-gradient(to right, #ff5e62, #ff9966)',
+                                            },
                                         }).showToast();
+
                                         console.error('Error:', error);
-                                    });
-                            });
-                        </script>
+                                    }
+                                });
+                            </script>
+                        </div>
                     </form>
+
                 </div>
             </div>
         </div>

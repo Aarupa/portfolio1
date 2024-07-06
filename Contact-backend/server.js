@@ -7,9 +7,17 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors()); //cross-origin resourse shear
+
+//cross-origin resourse shear
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type']
+}));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
 
 app.post('/send', (req, res) => {
     const { name, email, subject, message } = req.body;
